@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <!-- you have these scripts already at the bottom, so remove them herex` -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="projec.css">
@@ -31,6 +32,7 @@
                         <li><a href="#page2">NEW</a></li>
                         <li><a href="#page3">NEWSFEEDS</a></li>
                     </ul>
+                    <!-- you dont need this -->
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="#">search</a></li>
                     </ul>
@@ -50,15 +52,18 @@
                             <div class="front">
                                 <!-- front content -->
                                 <div class="card">
+                                    <!-- please dont use inline styles, use classes and css to style -->
                                     <img src="coffee background.jpg" data-src="holder.js/100px180/" alt="100%x180" style="height: 180px; width: 100%; display: block;" data-holder-rendered="true">
                                     <div class="card-block">
                                         <h4 class="card-title">Takudzwa Vengai :22</h4>
                                         <p class="card-text">User's Email :tvengai75@gmail.com</p>
                                         <p> User's Phone: +27659606755</p>
                                         <p>User's Landline: +27249576024</p>
+                                        <!-- data-target will select which modal to open. referenced by ID. THIS MUST BE UNIQUE FOR EVERY MODAL -->
                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#DELETE"> DELETE </button>
 
                                         <!-- Modal -->
+                                        <!-- Has ID of DELETE. EACH MODAL MUST HAVE UNIQUE ID PLEASE -->
                                         <div class="modal fade" id="DELETE" tabindex="-1" role="dialog" aria-labelledby="DELETE" aria-hidden="true">
                                             <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
