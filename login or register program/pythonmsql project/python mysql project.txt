@@ -1,0 +1,421 @@
+import mysql.connector
+import datetime
+
+mydbconnection = mysql.connector.connect(host="localhost", port="3306", user="root", password="1234",
+                                         database="life_choice")
+cursor = mydbconnection.cursor()
+
+
+class Options:
+
+    def Login(self):
+        while True:
+            print("Please Login using your details:")
+            username = str(input("Username\n"))
+            password = input("Password\n")
+
+            find_user = "SELECT *FROM users WHERE username =%s AND password=%s"
+            cursor.execute(find_user, [username, password])
+            results = cursor.fetchall()
+
+            if results:
+                for i in results:
+                    print("welcome", " " + i[1])
+                    return self.sign_in()
+
+            else:
+                print("username and password not found")
+                again = input("Do you want to try again y / n\n")
+                if again.lower() == "n":
+                    print("GOODBYE")
+                    return self.menu()
+
+    def sign_in(self):
+        print("Please Sign-In into Life choice")
+        try:
+            username = str(input("Username\n"))
+            password = input("Password\n")
+            sign_in_time = datetime.datetime.now()
+
+            # this is a function to send data to my database
+            # this insert insert data and store it  time is stored  and the administrator will view it
+            sql = "insert into sign_in (username , password, sign_in_time) VALUES(%s, %s, %s) "
+            vals = (username, password, sign_in_time)
+            cursor.execute(sql, vals)
+            mydbconnection.commit()
+            print("Have a Good day at Life Choice")
+            return self.logOutMenu()
+
+        except ValueError:
+            print("Please Sign in with Valid details")
+            return self.menu()
+
+    # this is the function to register the new user who is not registered in the database
+    #  a new user selects option 2 to register
+    # you are registered to the visitor table in the database
+    def register(self):
+        print("Please Register Using your details:")
+        username = str(input("Username\n"))
+        full_name = str(input("First Name\n"))
+        password = input("Password\n")
+        email = str(input("enter your Email"))
+        login_time = datetime.datetime.now()
+        # this sends the new user details to the database where it stored and later be used to login
+        # if a new user doesnt have account their data is send here
+        sql = "insert into visitors (full_name,username, password , email,login_time) VALUES(%s, %s, " \
+              "%s ,%s ,%s) "
+        vals = (full_name, username, password, email, login_time)
+        cursor.execute(sql, vals)
+        mydbconnection.commit()
+        return self.afterRegister()
+
+    # this function called after a visitor register at Life choice the he\she is allowed to login in
+    # that's why l name it after register
+    def afterRegister(self):
+        print("Please Login Using Your Details")
+        username = str(input("Username\n"))
+        password = input("Password\n")
+
+        find_user = "SELECT *FROM visitors WHERE username =%s AND password=%s"
+        cursor.execute(find_user, [username, password])
+        results = cursor.fetchall()
+
+        if results:
+            for i in results:
+                print("welcome", " " + i[1])
+                return self.sign_in()
+
+        else:
+            print("username and password not found")
+            again = input("Do you want to try again y / n\n")
+            if again.lower() == "n":
+                print("GOODBYE")
+
+    #  this menu displays the menu AT the first of the program
+    #  the user is allowed to choose from two options
+    # its either you register ot you login
+    def menu(self):
+        print("WELCOME TO LIFE CHOICE ONLINE")
+        print("1.login")
+        print("2.Register")
+        try:
+            option = int(input("Please choose:: \n"))
+            if option == 1:
+                return self.Login()
+
+            elif option == 2:
+                return self.register()
+
+            elif option == 3:
+                return self.AdminLogin()
+
+            elif option == 4:
+                return self.firemanLogin()
+
+        except ValueError:
+            print("Try to insert number not letters")
+            return self.menu()
+
+        # this is the logOut menu that will be displayed after you login after you have successfully login
+        # the user will have a choice either to logout of to exit the program
+        # it is logoutMenu
+
+    def logOutMenu(self):
+        print("Please Make Sure To Sign Out")
+        print("1.Sign-Out")
+        try:
+            option = int(input("Please choose:: \n"))
+            if option == 1:
+                return self.logout()
+            else:
+                return self.logOutMenu()
+        except ValueError:
+            print("Please Enter Numbers only from the Option")
+            return self.logOutMenu()
+
+    # this is the option to logout after you have login from the life choice
+    # you provide your details to logout
+    # the date and time is recorded as soon as you logout from the system
+    def logout(self):
+        print("Please Logout before you leave")
+        try:
+            username = str(input("Username\n"))
+            password = input("Password\n")
+            logout_time = datetime.datetime.now()
+
+            # this is a function to send data to my database
+            # this insert insert data and store it  time is stored  and the administrator will view it
+            sql = "insert into logout (username , password, logout_time) VALUES(%s, %s, %s) "
+            vals = (username, password, logout_time)
+            cursor.execute(sql, vals)
+            mydbconnection.commit()
+            print("Successfully Logout")
+            return self.menu()
+        except ValueError:
+            print("Please Enter Valid Option From the Menu")
+            return self.logout()
+
+    def AdminLogin(self):
+        try:
+            while True:
+                print("Please Enter Your Admin details:")
+                username = str(input("Username\n"))
+                password = int(input("Password\n"))
+                find_user = "SELECT *FROM Admin WHERE username =%s AND password=%s"
+                cursor.execute(find_user, [username, password])
+                results = cursor.fetchall()
+
+                if results:
+                    for i in results:
+                        print("welcome", " " + i[0])
+                        return self.Admin()
+
+                else:
+                    print("username and password not found")
+                    again = input("Do you want to try again y / n\n")
+                    if again.lower() == "n":
+                        print("GOODBYE")
+        except ValueError:
+            print("Please Enter VALID Option Required!!!!!!")
+            return self.AdminLogin()
+
+    # this is the side where the admin knows only
+    # so this function allows the admin to delete user and add a user to different tables
+    # this function allows the admin to perform different things
+    def Admin(self):
+        try:
+            print("------------Welcome To the administrator side-------------")
+            print("1. Add User OR Delete User")
+            print("2. Who Sign in")
+            print("3. Who Sign out")
+            print("4.logout")
+            option = int(input("Select Option to Perform\n"))
+            if option == 1:
+                return self.adminAdd_Del_User()
+
+            elif option == 2:
+                return self.who_sign_in()
+
+            elif option == 3:
+                return self.who_sign_out()
+
+            elif option == 4:
+                return self.logOutMenu()
+
+        except ValueError:
+            print("Please Select A Valid Option")
+            return self.Admin()
+
+    # this function allows you to select where to add new users to your database
+    # between TABLE user or TABLE visitors
+    def adminAdd_Del_User(self):
+        print(">>>You Want To Add User to<<<<")
+        print(" 1.Users Table")
+        print(" 2.Visitors")
+        print(">>>You want to delete user from<<<<")
+        print(" 3.       Users ")
+        print(" 4.       Visitors")
+        print("5. Back To Menu")
+        try:
+            option = int(input("Please Enter Your Option\n"))
+            if option == 1:
+                return self.addminOption1()
+
+            elif option == 2:
+                return self.addminOption2()
+
+            elif option == 3:
+                return self.delete_user()
+
+            elif option == 4:
+                return self.delete_visitor()
+
+            elif option == 5:
+                return self.Admin()
+
+        except ValueError:
+            print("Please Enter A Valid Option from The Menu")
+
+    # if the administration choose option it means he wants to add a new user to the user table
+    # and this function is only to add user
+    def addminOption1(self):
+        print("Please Add User Using User's details:")
+        username = str(input("Username\n"))
+        full_name = str(input("First Name\n"))
+        password = input("Password\n")
+        email = str(input("enter your Email\n"))
+        login_time = datetime.datetime.now()
+
+        # this sends the new user details to the database where it stored and later be used to login
+        # if a new user doesnt have account their data is send here
+        sql = "insert into users (full_name,username, password , email,login_time) VALUES(%s, %s, " \
+              "%s ,%s ,%s) "
+        vals = (full_name, username, password, email, login_time)
+        cursor.execute(sql, vals)
+        mydbconnection.commit()
+        return self.Admin()
+
+    # if the administration choose option2 it means he\she wants to add a new user to the visitor table
+    # and this function is only to add user to the visitor table
+    def addminOption2(self):
+        print("Please Register User To Visitors Using User details:")
+        username = str(input("Username\n"))
+        full_name = str(input("First Name\n"))
+        password = input("Password\n")
+        email = str(input("enter your Email"))
+        login_time = datetime.datetime.now()
+        # this sends the new user details to the database where it stored and later be used to login
+        # if a new user doesnt have account their data is send here
+        sql = "insert into visitors (full_name,username, password , email,login_time) VALUES(%s, %s, " \
+              "%s ,%s ,%s) "
+        vals = (full_name, username, password, email, login_time)
+        cursor.execute(sql, vals)
+        mydbconnection.commit()
+        return self.Admin()
+
+    # this is the delete user  function
+    # this will only be done wby the administration
+    # it takes the user details and delete from the database
+    def delete_user(self):
+        print("Please Enter The Username of the Visitor You want to delete:")
+        username = str(input("Username\n"))
+        find_user = "DELETE FROM users WHERE username =%s"
+
+        value = (username,)
+
+        try:
+            cursor.execute(find_user, value)
+            mydbconnection.commit()
+            print("Data Deleted")
+            return self.Admin()
+
+        except ValueError:
+            print("Unable to delete")
+            mydbconnection.close()
+            return self.Admin()
+
+    # this is the delete user  function
+    # this will only be done wby the administration
+    # it takes the user details and delete from the database
+    def delete_visitor(self):
+        print("Please Enter The Username of the Visitor You want to delete:")
+        username = str(input("Username\n"))
+        find_user = "DELETE FROM visitors WHERE username =%s"
+
+        value = (username,)
+
+        try:
+            cursor.execute(find_user, value)
+            mydbconnection.commit()
+            print("Data Deleted")
+            return self.Admin()
+
+        except ValueError:
+            print("Unable to delete")
+            mydbconnection.close()
+            return self.Admin()
+
+    # this function shows  users that have signed in the life choice
+    # it displays the names of the user and the time and date they signed in
+    def who_sign_in(self):
+        sign = " select *from sign_in"
+        try:
+            cursor.execute(sign)
+            myresults = cursor.fetchall()
+
+            for row in myresults:
+                mydbconnection.commit()
+                print(row)
+
+            return self.Admin()
+
+        except ValueError:
+            print("Unable To Get Data ")
+            mydbconnection.close()
+            return self.Admin()
+
+    # this is the function that shows the list of people who signed out of the life choice
+    # this function is called and returns people in the database table logout
+
+    def who_sign_out(self):
+        sign = cursor.execute("SELECT *FROM logout")
+        try:
+            cursor.execute(sign)
+            myresults = cursor.fetchall()
+
+            for row in myresults:
+                mydbconnection.commit()
+                print(row)
+
+            return self.Admin()
+
+        except ValueError:
+            print("Unable To Get Data ")
+            mydbconnection.close()
+            return self.Admin()
+
+    # this is the platform where the fire marshall will use to login before they get into the system
+    # the function will return the login details that allows a user to login
+    def firemanLogin(self):
+        try:
+            while True:
+                print("Please Enter Your Fire Marshall details:")
+                username = str(input("Username\n"))
+                password = int(input("Password\n"))
+                find_user = "SELECT *FROM fireman WHERE username =%s AND password=%s"
+                cursor.execute(find_user, [username, password])
+                results = cursor.fetchall()
+
+                if results:
+                    for i in results:
+                        print("welcome", " " + i[0])
+                        return self.fireMenu()
+
+                else:
+                    print("username and password not found")
+                    again = input("Do you want to try again y / n\n")
+                    if again.lower() == "n":
+                        print("GOODBYE")
+        except ValueError:
+            print("Please Enter VALID Option Required!!!!!!")
+            return self.firemanLogin()
+
+    # the function will return a menu for the fire marshal to select on what to do
+    def fireMenu(self):
+        print("1. Show Who is in the Building ")
+        print("2. logout")
+        try:
+            option = int(input("Please Press Valid Option To Continue"))
+            if option == 1:
+                return self.fireMan()
+
+            elif option == 2:
+                return self.logOutMenu()
+
+        except ValueError:
+            print("Please Enter Valid Option to Continue")
+            return self.fireMenu()
+
+        # this allows the fire marshall to see who is in the building
+        # it prints all the data of people for sign in that day
+
+    def fireMan(self):
+        sign = " select *from sign_in"
+        try:
+            cursor.execute(sign)
+            myresults = cursor.fetchall()
+
+            for row in myresults:
+                mydbconnection.commit()
+                print(row)
+
+            return self.fireMenu()
+
+        except ValueError:
+            print("Unable To Get Data ")
+            mydbconnection.close()
+            return self.fireMenu()
+
+
+t = Options()
+t.menu()

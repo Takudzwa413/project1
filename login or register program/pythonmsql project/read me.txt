@@ -1,0 +1,17 @@
+---------------------------------------------
+you press 4 to enter into Firemarshall side
+
+username and password for firemarshalls is 
+Username1:Godwin
+password:12345
+username2:Takudzwa
+password:12345
+--------------------------------------------
+you press 3 to enetr into Admin side
+
+username and password for admin
+username1:Godwin
+password:1234
+username2:Takudzwa
+password:1234
+----------------------------------------------------
