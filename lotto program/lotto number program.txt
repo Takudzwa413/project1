@@ -1,0 +1,153 @@
+# Simbarashe Alan Musanjeya
+# Class 1
+# Project Lotto
+import datetime
+import random
+
+menu_check = True
+
+
+# 'checker', compares userNums and winningNums to see if they have won or lost
+
+def checker(userNums, winningNums):
+    counter = 0
+    for nums in userNums:
+        if nums in winningNums:
+            counter += 1
+
+    if counter == 6:
+        print("\nCongratulations! You Win R10 000 000!\n")
+        print("Your numbers: ", userNums)
+        print("The winning lottery numbers are: ", winningNums, "\n")
+        now = datetime.datetime.now()
+        print("Todays Date is", now.strftime("%y %m %d"))
+
+    elif counter == 5:
+        print("You win R8 584.00 ")
+        print("Your numbers: ", userNums)
+        print("The winning lottery numbers are: ", winningNums, "\n")
+        now = datetime.datetime.now()
+        print("Todays Date is", now.strftime("%y %m %d"))
+
+    elif counter == 4:
+        print("You win R2 384.00 ")
+        print("Your numbers: ", userNums)
+        print("The winning lottery numbers are: ", winningNums, "\n")
+        now = datetime.datetime.now()
+        print("Todays Date is", now.strftime("%y %m %d"))
+
+    elif counter == 3:
+        print("You win R100.50 ")
+        print("Your numbers: ", userNums)
+        print("The winning lottery numbers are: ", winningNums, "\n")
+        now = datetime.datetime.now()
+        print("Todays Date is", now.strftime("%y %m %d"))
+
+    elif counter == 2:
+        print("You win R20.00 ")
+        print("Your numbers: ", userNums)
+        print("The winning lottery numbers are: ", winningNums, "\n")
+        now = datetime.datetime.now()
+        print("Todays Date is", now.strftime("%y %m %d"))
+
+    elif counter == 1:
+        print("Goodluck next time no matches")
+        print("Your numbers: ", userNums)
+        print("The winning lottery numbers are: ", winningNums, "\n")
+        now = datetime.datetime.now()
+        print("Todays Date is", now.strftime("%y %m %d"))
+
+# 'getUserNums', gets user numbers and puts into a sorted list
+def getUserNums():
+    userNums = []
+
+    for x in range(6):
+        nums = int(input("Pick a number 0 through 49: "))
+        if 0 <= nums <= 49 and nums not in userNums:
+            userNums.append(nums)
+        else:
+            input("Error! Invalid input. Press any key to continue...")
+            nums = int(input("Pick a number 0 through 49: "))
+            userNums.append(nums)
+
+    return sorted(userNums)
+
+
+# 'getWinningNums', creates a sorted list with random nums ranging from 0-9 with a range of 3 values
+def getWinningNums():
+    lottonums = []
+    for i in range(0, 6):
+        nums = random.randint(0, 49)
+        while nums in lottonums:
+            nums = random.randint(0, 49)
+
+        lottonums.append(nums)
+    lottonums.sort()
+    return lottonums
+
+
+# 'menu', creates the main menu to choose game or exit program
+def menu():
+    print(30 * "-", "LOTTERY TAKU MENU", 30 * "-")
+    print("1. [Play Pick-3]")
+    print("2. Exit")
+    print(75 * "-")
+
+
+# 'main', calls the other functions
+def main():
+    userNums = getUserNums()
+    winningNums = getWinningNums()
+    checker(userNums, winningNums)
+
+
+# Main menu
+#checking the age of the user is its above 18 in order for the player to be able to participate
+while menu_check:
+    menu()
+    Age = input("Enter your age\n")
+    choice = input("\nEnter your choice[1-2]: ")
+
+    if Age < '18':
+        print("Too Young To Play")
+        break
+
+    if choice == '1':
+        print(23 * "-")
+        print("[Play Pick-3] selected!")
+        print(23 * "-")
+        menu_check = False
+        main()
+
+    elif choice == '2':
+        print("\nThanks for playing!\n")
+        menu_check = False
+    else:
+        input("Error! Invalid input. Press any key to continue...\n")
+
+#creating a text file so thayt it shows our output
+#should include the age,lotto numbers and the winning numbers
+lottonumber = getWinningNums()
+
+userNumber = getUserNums()
+
+result = open("Lottery.txt", "a")
+result.write(str("Age: ") )
+result.write(str(Age) + "\n")
+result.write(str("Today's lottery numbers are: "))
+result.write(str(lottonumber) + "\n")
+result.write(str("Your lotto numbers are: "))
+result.write(str(userNumber) + "\n")
+result.write(str("Amount of numbers matching in lottery: "))
+result.write(str(counter) + "\n")
+result.write(str("Prizes based on how many numbers user got correct:" + "\n"))
+result.write(str("6 : R10 000 000.00" + "\n"))
+result.write(str("5 : R8 584.00" + "\n"))
+result.write(str("4 : R2 384.00" + "\n"))
+result.write(str("3 : R100.50" + "\n"))
+result.write(str("2 : R20.00" + "\n"))
+result.write(str("1 : R0.00" + "\n"))
+result.write("Date:" + str(datetime.now().strftime("%Y-%m-%d" + "\n" +"Time:%H:%M:%S")))
+result.close()
+
+
