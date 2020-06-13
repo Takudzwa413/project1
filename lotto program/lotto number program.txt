@@ -1,5 +1,5 @@
-# Simbarashe Alan Musanjeya
-# Class 1
+
+
 # Project Lotto
 import datetime
 import random
